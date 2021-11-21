@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    public static UIManager Instance => instance;
+    public TMP_InputField UsernameField  => usernameField;
+
     [SerializeField] GameObject startMenu;
     [SerializeField] TMP_InputField usernameField;
 
