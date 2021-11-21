@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Net;
+using UnityEngine;
 
 public class ClientHandle : MonoBehaviour
 {
@@ -10,5 +11,14 @@ public class ClientHandle : MonoBehaviour
         Debug.Log($"Message from server: {_msg}");
         Client.Instance.MyId = _myId;
         ClientSend.WelcomeReceived();
+
+        Client.Instance.Udp.Connect(((IPEndPoint)Client.Instance.Tcp.socket.Client.LocalEndPoint).Port);
+    }
+    public static void UDPTest(Packet _packet)
+    {
+        string _msg = _packet.ReadString();
+
+        Debug.Log($"Received packet via UDP. Contains message: {_msg}");
+        ClientSend.UDPTestReceived();
     }
 }
