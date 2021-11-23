@@ -3,22 +3,24 @@ using UnityEngine;
 
 public class ClientHandle : MonoBehaviour
 {
-    public static void Welcome(Packet _packet)
+    public static void Welcome(Packet packet)
     {
-        string _msg = _packet.ReadString();
-        int _myId = _packet.ReadInt();
+        string msg = packet.ReadString();
+        int myId = packet.ReadInt();
 
-        Debug.Log($"Message from server: {_msg}");
-        Client.Instance.MyId = _myId;
+        Debug.Log($"Message from server: {msg}");
+        Client.Instance.MyId = myId;
         ClientSend.WelcomeReceived();
 
         Client.Instance.Udp.Connect(((IPEndPoint)Client.Instance.Tcp.socket.Client.LocalEndPoint).Port);
     }
-    public static void UDPTest(Packet _packet)
-    {
-        string _msg = _packet.ReadString();
 
-        Debug.Log($"Received packet via UDP. Contains message: {_msg}");
-        ClientSend.UDPTestReceived();
+    public static void SpawnPlayer(Packet packet)
+    {
+        int id = packet.ReadInt();
+        string username = packet.ReadString();
+        Vector2 position = packet.ReadVector2();
+
+        GameManager.Instance.SpawnPlayer(id, username, position, Quaternion.identity);
     }
 }

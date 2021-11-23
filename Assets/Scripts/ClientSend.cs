@@ -2,37 +2,27 @@
 
 public class ClientSend : MonoBehaviour
 {
-    private static void SendTCPData(Packet _packet)
+    private static void SendTCPData(Packet packet)
     {
-        _packet.WriteLength();
-        Client.Instance.Tcp.SendData(_packet);
+        packet.WriteLength();
+        Client.Instance.Tcp.SendData(packet);
     }
 
-    private static void SendUDPData(Packet _packet)
+    private static void SendUDPData(Packet packet)
     {
-        _packet.WriteLength();
-        Client.Instance.Udp.SendData(_packet);
+        packet.WriteLength();
+        Client.Instance.Udp.SendData(packet);
     }
 
     #region Packets
     public static void WelcomeReceived()
     {
-        using (Packet _packet = new Packet((int)ClientPackets.welcomeReceived))
+        using (Packet packet = new Packet((int)ClientPackets.WelcomeReceived))
         {
-            _packet.Write(Client.Instance.MyId);
-            _packet.Write(UIManager.Instance.UsernameField.text);
+            packet.Write(Client.Instance.MyId);
+            packet.Write(UIManager.Instance.UsernameField.text);
 
-            SendTCPData(_packet);
-        }
-    }
-
-    public static void UDPTestReceived()
-    {
-        using (Packet _packet = new Packet((int)ClientPackets.udpTestReceived))
-        {
-            _packet.Write("Received a UDP packet.");
-
-            SendUDPData(_packet);
+            SendTCPData(packet);
         }
     }
     #endregion
