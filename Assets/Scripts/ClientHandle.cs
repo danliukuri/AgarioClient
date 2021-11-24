@@ -23,4 +23,12 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.Instance.SpawnPlayer(id, username, position, Quaternion.identity);
     }
+
+    public static void PlayerMovement(Packet packet)
+    {
+        int id = packet.ReadInt();
+        Vector2 position = packet.ReadVector2();
+
+        GameManager.GetPlayer(id).SetPosition(position);
+    }
 }

@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     static Dictionary<int, Player> players = new Dictionary<int, Player>();
     static GameManager instance;
 
+    public static Player GetPlayer(int index) => players[index];
+
     private void Awake()
     {
         if (instance == null)

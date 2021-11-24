@@ -25,5 +25,14 @@ public class ClientSend : MonoBehaviour
             SendTCPData(packet);
         }
     }
+
+    public static void PlayerMovement(Vector2 position)
+    {
+        using (Packet packet = new Packet((int)ClientPackets.PlayerMovement))
+        {
+            packet.Write(position);
+            SendUDPData(packet);
+        }
+    }
     #endregion
 }

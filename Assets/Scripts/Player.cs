@@ -2,15 +2,17 @@
 
 public class Player : MonoBehaviour
 {
-    public int Id => id;
-    public string Username => username;
-
-    int id;
-    string username;
-
+    public int Id { get; private set; }
+    public string Username { get; private set; }
+    
     public void Initialize(int id, string username)
     {
-        this.id = id;
-        this.username = username;
+        Id = id;
+        Username = username;
+    }
+
+    public void SetPosition(Vector2 position)
+    {
+        transform.position = position;
     }
 }
