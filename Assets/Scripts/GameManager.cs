@@ -35,4 +35,10 @@ public class GameManager : MonoBehaviour
         player.Initialize(id, username);
         players.Add(id, player);
     }
+
+    public static void RemovePlayer(int id)
+    {
+        Destroy(players[id].gameObject);
+        players.Remove(id);
+    }
 }

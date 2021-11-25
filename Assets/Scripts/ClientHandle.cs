@@ -14,6 +14,11 @@ public class ClientHandle : MonoBehaviour
 
         Client.Instance.Udp.Connect(((IPEndPoint)Client.Instance.Tcp.socket.Client.LocalEndPoint).Port);
     }
+    public static void PlayerDisconnected(Packet packet)
+    {
+        int id = packet.ReadInt();
+        GameManager.RemovePlayer(id);
+    }
 
     public static void SpawnPlayer(Packet packet)
     {

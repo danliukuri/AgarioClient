@@ -19,7 +19,7 @@ public class Client : MonoBehaviour
     UDP udp;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
-
+    private bool isConnected;
     static Client instance;
     
 
@@ -35,18 +35,33 @@ public class Client : MonoBehaviour
             Destroy(this);
         }
     }
-
     private void Start()
     {
         tcp = new TCP();
         udp = new UDP();
+    }
+    private void OnApplicationQuit()
+    {
+        Disconnect();
     }
 
     public void ConnectToServer()
     {
         InitializeClientData();
 
+        isConnected = true;
         tcp.Connect();
+    }
+    private void Disconnect()
+    {
+        if (isConnected)
+        {
+            isConnected = false;
+            tcp.socket.Close();
+            udp.socket.Close();
+
+            Debug.Log("Disconnected from server.");
+        }
     }
 
     public class TCP
@@ -68,21 +83,14 @@ public class Client : MonoBehaviour
             receiveBuffer = new byte[dataBufferSize];
             socket.BeginConnect(instance.ip, instance.port, ConnectCallback, socket);
         }
-
-        private void ConnectCallback(IAsyncResult _result)
+        private void Disconnect()
         {
-            socket.EndConnect(_result);
+            instance.Disconnect();
 
-            if (!socket.Connected)
-            {
-                return;
-            }
-
-            stream = socket.GetStream();
-
-            receivedData = new Packet();
-
-            stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+            stream = null;
+            receivedData = null;
+            receiveBuffer = null;
+            socket = null;
         }
 
         public void SendData(Packet _packet)
@@ -99,30 +107,6 @@ public class Client : MonoBehaviour
                 Debug.Log($"Error sending data to server via TCP: {_ex}");
             }
         }
-
-        private void ReceiveCallback(IAsyncResult _result)
-        {
-            try
-            {
-                int _byteLength = stream.EndRead(_result);
-                if (_byteLength <= 0)
-                {
-                    // TODO: disconnect
-                    return;
-                }
-
-                byte[] _data = new byte[_byteLength];
-                Array.Copy(receiveBuffer, _data, _byteLength);
-
-                receivedData.Reset(HandleData(_data));
-                stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
-            }
-            catch
-            {
-                // TODO: disconnect
-            }
-        }
-
         private bool HandleData(byte[] _data)
         {
             int _packetLength = 0;
@@ -168,6 +152,44 @@ public class Client : MonoBehaviour
 
             return false;
         }
+
+        private void ConnectCallback(IAsyncResult _result)
+        {
+            socket.EndConnect(_result);
+
+            if (!socket.Connected)
+            {
+                return;
+            }
+
+            stream = socket.GetStream();
+
+            receivedData = new Packet();
+
+            stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+        }
+        private void ReceiveCallback(IAsyncResult _result)
+        {
+            try
+            {
+                int _byteLength = stream.EndRead(_result);
+                if (_byteLength <= 0)
+                {
+                    Instance.Disconnect();
+                    return;
+                }
+
+                byte[] _data = new byte[_byteLength];
+                Array.Copy(receiveBuffer, _data, _byteLength);
+
+                receivedData.Reset(HandleData(_data));
+                stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
+            }
+            catch
+            {
+                Disconnect();
+            }
+        }
     }
     public class UDP
     {
@@ -191,6 +213,13 @@ public class Client : MonoBehaviour
                 SendData(_packet);
             }
         }
+        private void Disconnect()
+        {
+            instance.Disconnect();
+
+            endPoint = null;
+            socket = null;
+        }
 
         public void SendData(Packet _packet)
         {
@@ -207,28 +236,6 @@ public class Client : MonoBehaviour
                 Debug.Log($"Error sending data to server via UDP: {_ex}");
             }
         }
-
-        private void ReceiveCallback(IAsyncResult _result)
-        {
-            try
-            {
-                byte[] _data = socket.EndReceive(_result, ref endPoint);
-                socket.BeginReceive(ReceiveCallback, null);
-
-                if (_data.Length < 4)
-                {
-                    // TODO: disconnect
-                    return;
-                }
-
-                HandleData(_data);
-            }
-            catch
-            {
-                // TODO: disconnect
-            }
-        }
-
         private void HandleData(byte[] _data)
         {
             using (Packet _packet = new Packet(_data))
@@ -246,12 +253,34 @@ public class Client : MonoBehaviour
                 }
             });
         }
+
+        private void ReceiveCallback(IAsyncResult _result)
+        {
+            try
+            {
+                byte[] _data = socket.EndReceive(_result, ref endPoint);
+                socket.BeginReceive(ReceiveCallback, null);
+
+                if (_data.Length < 4)
+                {
+                    Instance.Disconnect();
+                    return;
+                }
+
+                HandleData(_data);
+            }
+            catch
+            {
+                Disconnect();
+            }
+        }
     }
     private void InitializeClientData()
     {
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
             { (int)ServerPackets.Welcome, ClientHandle.Welcome },
+            { (int)ServerPackets.PlayerDisconnected, ClientHandle.PlayerDisconnected },
             { (int)ServerPackets.SpawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.PlayerMovement, ClientHandle.PlayerMovement }
         };
