@@ -15,7 +15,7 @@ public class PlayerInput : MonoBehaviour
     void SendToServer()
     {
         Vector2 position = playerCamera.ScreenToWorldPoint(Input.mousePosition);
-        ClientSend.PlayerMovement(position);
+        ClientPacketsSender.PlayerMovement(position);
     }
     #endregion
 }

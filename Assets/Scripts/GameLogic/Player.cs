@@ -2,9 +2,12 @@
 
 public class Player : MonoBehaviour
 {
+    #region Properties
     public int Id { get; private set; }
     public string Username { get; private set; }
-    
+    #endregion
+
+    #region Methods
     public void Initialize(int id, string username)
     {
         Id = id;
@@ -15,4 +18,5 @@ public class Player : MonoBehaviour
     {
         transform.position = position;
     }
+    #endregion
 }

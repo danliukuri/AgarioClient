@@ -3,14 +3,18 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance => instance;
-    public TMP_InputField UsernameField  => usernameField;
+    #region Properties
+    public static TMP_InputField UsernameField => instance.usernameField;
+    #endregion
 
+    #region Fields
     [SerializeField] GameObject startMenu;
     [SerializeField] TMP_InputField usernameField;
 
     static UIManager instance;
+    #endregion
 
+    #region Methods
     private void Awake()
     {
         if (instance == null)
@@ -28,6 +32,7 @@ public class UIManager : MonoBehaviour
     {
         startMenu.SetActive(false);
         usernameField.interactable = false;
-        Client.Instance.ConnectToServer();
+        Client.ConnectToServer();
     }
+    #endregion
 }
