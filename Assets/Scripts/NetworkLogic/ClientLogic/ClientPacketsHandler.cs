@@ -27,7 +27,7 @@ public class ClientPacketsHandler : MonoBehaviour
         string username = packet.ReadString();
         Vector2 position = packet.ReadVector2();
 
-        PlayersManager.SpawnPlayer(id, username, position, Quaternion.identity);
+        PlayersManager.SpawnPlayer(id, username, position);
     }
     public static void PlayerMovement(Packet packet)
     {

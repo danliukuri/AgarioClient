@@ -13,6 +13,12 @@ public class Player : MonoBehaviour
         Id = id;
         Username = username;
     }
+    public void Reset()
+    {
+        Id = default;
+        Username = default;
+        transform.position = Vector3.zero;
+    }
 
     public void SetPosition(Vector2 position)
     {

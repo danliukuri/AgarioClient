@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Pool;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayersManager : MonoBehaviour
@@ -27,20 +28,27 @@ public class PlayersManager : MonoBehaviour
         }
     }
 
-    public static void SpawnPlayer(int id, string username, Vector3 position, Quaternion rotation)
+    public static void SpawnPlayer(int id, string username, Vector3 position)
     {
-        GameObject playerToSpawn = id == Client.Id ?
-            instance.localPlayerPrefab : instance.globalPlayerPrefab;
-        GameObject playerGameObject = Instantiate(playerToSpawn, position, rotation);
+        string playerName = id == Client.Id ?
+            instance.localPlayerPrefab.name :
+            instance.globalPlayerPrefab.name;
+        GameObject playerGameObject = PoolManager.GetGameObject(playerName);
+        playerGameObject.transform.position = position;
 
         Player player = playerGameObject.GetComponent<Player>();
         player.Initialize(id, username);
         players.Add(id, player);
+
+        playerGameObject.SetActive(true);
     }
     public static void RemovePlayer(int id)
     {
-        Destroy(players[id].gameObject);
+        Player player = players[id];
         players.Remove(id);
+
+        player.Reset();
+        player.gameObject.SetActive(false);
     }
     #endregion
 }
