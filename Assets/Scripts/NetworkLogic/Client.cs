@@ -55,6 +55,8 @@ public partial class Client : MonoBehaviour
         {
             ClientPacketsHandler.Welcome,
             ClientPacketsHandler.PlayerDisconnected,
+            ClientPacketsHandler.FieldGenerated,
+            ClientPacketsHandler.CurrentFieldSectorUpdate,
             ClientPacketsHandler.SpawnPlayer,
             ClientPacketsHandler.PlayerMovement
         };

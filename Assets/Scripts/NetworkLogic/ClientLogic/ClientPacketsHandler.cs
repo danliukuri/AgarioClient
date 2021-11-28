@@ -21,6 +21,22 @@ public class ClientPacketsHandler : MonoBehaviour
         PlayersManager.RemovePlayer(id);
     }
 
+    public static void FieldGenerated(Packet packet)
+    {
+        int hight = packet.ReadInt();
+        int width = packet.ReadInt();
+        Vector2 startSectorPosition = packet.ReadVector2();
+        Vector2 sectorSize = packet.ReadVector2();
+        Field.GenerateSectorsPositions(hight, width, startSectorPosition, sectorSize);
+    }
+    public static void CurrentFieldSectorUpdate(Packet packet)
+    {
+        int hightIndex = packet.ReadInt();
+        int widthIndex = packet.ReadInt();
+
+        Field.DrawSectors(hightIndex, widthIndex);
+    }
+
     public static void SpawnPlayer(Packet packet)
     {
         int id = packet.ReadInt();
