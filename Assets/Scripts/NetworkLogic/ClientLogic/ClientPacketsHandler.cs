@@ -15,11 +15,6 @@ public class ClientPacketsHandler : MonoBehaviour
 
         Client.Udp.Connect(((IPEndPoint)Client.Tcp.Socket.Client.LocalEndPoint).Port);
     }
-    public static void PlayerDisconnected(Packet packet)
-    {
-        int id = packet.ReadInt();
-        PlayersManager.RemovePlayer(id);
-    }
 
     public static void FieldGenerated(Packet packet)
     {
@@ -49,14 +44,29 @@ public class ClientPacketsHandler : MonoBehaviour
         string username = packet.ReadString();
         Vector2 position = packet.ReadVector2();
 
-        PlayersManager.SpawnPlayer(id, username, position);
+        if (!PlayersManager.PlayersContainsKey(id))
+            PlayersManager.SpawnPlayer(id, username, position);
+        else
+            Debug.Log("An unnecessary \"SpawnPlayer\" package received.");
     }
+    public static void RemovePlayer(Packet packet)
+    {
+        int id = packet.ReadInt();
+        if (PlayersManager.PlayersContainsKey(id))
+            PlayersManager.RemovePlayer(id);
+        else
+            Debug.Log("An unnecessary \"RemovePlayer\" package received.");
+    }
+
     public static void PlayerMovement(Packet packet)
     {
         int id = packet.ReadInt();
         Vector2 position = packet.ReadVector2();
 
-        PlayersManager.GetPlayer(id).SetPosition(position);
+        if (PlayersManager.PlayersContainsKey(id))
+            PlayersManager.GetPlayer(id).SetPosition(position);
+        else
+            Debug.Log("An unnecessary \"PlayerMovement\" package received.");
     }
     #endregion
 }

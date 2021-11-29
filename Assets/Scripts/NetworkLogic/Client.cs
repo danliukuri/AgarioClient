@@ -54,10 +54,10 @@ public partial class Client : MonoBehaviour
         packetHandlers = new PacketHandler[]
         {
             ClientPacketsHandler.Welcome,
-            ClientPacketsHandler.PlayerDisconnected,
             ClientPacketsHandler.FieldGenerated,
             ClientPacketsHandler.CurrentFieldSectorUpdate,
             ClientPacketsHandler.SpawnPlayer,
+            ClientPacketsHandler.RemovePlayer,
             ClientPacketsHandler.PlayerMovement
         };
         Debug.Log("Initialized packets.");
