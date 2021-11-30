@@ -28,7 +28,7 @@ public class Field : MonoBehaviour
     static Field instance;
     #endregion
 
-    #region MainMethods
+    #region Methods
     void Awake()
     {
         if (instance == null)
@@ -41,8 +41,7 @@ public class Field : MonoBehaviour
             Destroy(this);
         }
     }
-    public static void Initialize(int height, int width,
-        Vector2 startSectorPosition, Vector2 sectorSize,
+    public static void Initialize(int height, int width, Vector2 position, Vector2 sectorSize,
         int expansionMagnitudeOfVisibleSectors, int expansionMagnitudeOfInvisibleSectors)
     {
         Field.expansionMagnitudeOfVisibleSectors = expansionMagnitudeOfVisibleSectors;
@@ -50,6 +49,10 @@ public class Field : MonoBehaviour
 
         sectors = new GameObject[height, width];
         sectorsArrayDimensions = (height, width);
+
+        instance.transform.position = position;
+        Vector2 startSectorPosition = new Vector2(sectorSize.x / 2f + position.x,
+                                                  sectorSize.y / 2f + position.y);
 
         GenerateSectorsPositions(height, width, startSectorPosition, sectorSize);
     }
@@ -75,8 +78,8 @@ public class Field : MonoBehaviour
     public static void DrawSectors(int hightIndex, int widthIndex)
     {
         ((int Min, int Max) Hight, (int Min, int Max) Width) sectorsSpawnZone =
-            GetExtendedZone((hightIndex, widthIndex), expansionMagnitudeOfVisibleSectors,
-            sectorsArrayDimensions);
+            ArrayZone.GetExtendedZone((hightIndex, widthIndex),
+            expansionMagnitudeOfVisibleSectors, sectorsArrayDimensions);
 
         RemoveSectors(hightIndex, widthIndex);
 
@@ -96,8 +99,8 @@ public class Field : MonoBehaviour
     static void RemoveSectors(int hightIndex, int widthIndex)
     {
         ((int Min, int Max) Hight, (int Min, int Max) Width) sectorsSpawnExpandedZone =
-            GetExtendedZone((hightIndex, widthIndex), expansionMagnitudeOfInvisibleSectors,
-            sectorsArrayDimensions);
+            ArrayZone.GetExtendedZone((hightIndex, widthIndex),
+            expansionMagnitudeOfInvisibleSectors, sectorsArrayDimensions);
 
         for (int i = sectorsRemovalZone.Hight.Min; i <= sectorsRemovalZone.Hight.Max; i++)
             for (int j = sectorsRemovalZone.Width.Min; j <= sectorsRemovalZone.Width.Max; j++)
@@ -112,26 +115,5 @@ public class Field : MonoBehaviour
 
         sectorsRemovalZone = sectorsSpawnExpandedZone;
     }
-    #endregion
-
-    #region ArrayZoneMethods
-    static int GetExtendedMinIndex(int index, int expansionMagnitude) =>
-        index < expansionMagnitude ? 0 : index - expansionMagnitude;
-    static int GetExtendedMaxIndex(int index, int expansionMagnitude, int maxArrayLength) =>
-        index >= maxArrayLength - expansionMagnitude ? maxArrayLength - 1 : index + expansionMagnitude;
-    static ((int Min, int Max) Hight, (int Min, int Max) Width) GetExtendedZone(
-           ((int Min, int Max) Hight, (int Min, int Max) Width) zone,
-           int expansionMagnitude, (int Hight, int Width) arrayDimensions)
-    {
-        ((int Min, int Max) Hight, (int Min, int Max) Width) expandedZone;
-        expandedZone.Hight.Min = GetExtendedMinIndex(zone.Hight.Min, expansionMagnitude);
-        expandedZone.Hight.Max = GetExtendedMaxIndex(zone.Hight.Max, expansionMagnitude, arrayDimensions.Hight);
-        expandedZone.Width.Min = GetExtendedMinIndex(zone.Width.Min, expansionMagnitude);
-        expandedZone.Width.Max = GetExtendedMaxIndex(zone.Width.Max, expansionMagnitude, arrayDimensions.Width);
-        return expandedZone;
-    }
-    static ((int Min, int Max) Hight, (int Min, int Max) Width) GetExtendedZone(
-        (int Hight, int Width) zone, int expansionMagnitude, (int Hight, int Width) arrayDimensions) =>
-        GetExtendedZone(((zone.Hight, zone.Hight), (zone.Width, zone.Width)), expansionMagnitude, arrayDimensions);
     #endregion
 }

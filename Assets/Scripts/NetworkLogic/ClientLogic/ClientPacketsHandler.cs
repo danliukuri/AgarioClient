@@ -21,13 +21,13 @@ public class ClientPacketsHandler : MonoBehaviour
         int height = packet.ReadInt();
         int width = packet.ReadInt();
 
-        Vector2 startSectorPosition = packet.ReadVector2();
+        Vector2 position = packet.ReadVector2();
         Vector2 sectorSize = packet.ReadVector2();
 
         int expansionMagnitudeOfVisibleSectors = packet.ReadInt();
         int expansionMagnitudeOfInvisibleSectors = packet.ReadInt();
 
-        Field.Initialize(height, width, startSectorPosition, sectorSize,
+        Field.Initialize(height, width, position, sectorSize,
             expansionMagnitudeOfVisibleSectors, expansionMagnitudeOfInvisibleSectors);
     }
     public static void CurrentFieldSectorUpdate(Packet packet)
