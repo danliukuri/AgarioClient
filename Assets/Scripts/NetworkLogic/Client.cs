@@ -58,7 +58,9 @@ public partial class Client : MonoBehaviour
             ClientPacketsHandler.CurrentFieldSectorUpdate,
             ClientPacketsHandler.SpawnPlayer,
             ClientPacketsHandler.RemovePlayer,
-            ClientPacketsHandler.PlayerMovement
+            ClientPacketsHandler.PlayerMovement,
+            ClientPacketsHandler.SpawnFood,
+            ClientPacketsHandler.RemoveFood
         };
         Debug.Log("Initialized packets.");
     }

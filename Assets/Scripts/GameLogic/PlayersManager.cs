@@ -14,7 +14,6 @@ public class PlayersManager : MonoBehaviour
 
     #region Methods
     public static Player GetPlayer(int index) => players[index];
-    public static bool PlayersContainsKey(int index) => players.ContainsKey(index);
 
     private void Awake()
     {

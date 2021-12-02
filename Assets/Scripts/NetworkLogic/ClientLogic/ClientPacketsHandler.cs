@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using UnityEngine;
 
-public class ClientPacketsHandler : MonoBehaviour
+static class ClientPacketsHandler
 {
     #region PacketsHandling
     public static void Welcome(Packet packet)
@@ -27,6 +27,7 @@ public class ClientPacketsHandler : MonoBehaviour
         int expansionMagnitudeOfVisibleSectors = packet.ReadInt();
         int expansionMagnitudeOfInvisibleSectors = packet.ReadInt();
 
+        FoodManager.Initialize(height, width);
         Field.Initialize(height, width, position, sectorSize,
             expansionMagnitudeOfVisibleSectors, expansionMagnitudeOfInvisibleSectors);
     }
@@ -44,18 +45,12 @@ public class ClientPacketsHandler : MonoBehaviour
         string username = packet.ReadString();
         Vector2 position = packet.ReadVector2();
 
-        if (!PlayersManager.PlayersContainsKey(id))
-            PlayersManager.SpawnPlayer(id, username, position);
-        else
-            Debug.Log("An unnecessary \"SpawnPlayer\" package received.");
+        PlayersManager.SpawnPlayer(id, username, position);
     }
     public static void RemovePlayer(Packet packet)
     {
         int id = packet.ReadInt();
-        if (PlayersManager.PlayersContainsKey(id))
-            PlayersManager.RemovePlayer(id);
-        else
-            Debug.Log("An unnecessary \"RemovePlayer\" package received.");
+        PlayersManager.RemovePlayer(id);
     }
 
     public static void PlayerMovement(Packet packet)
@@ -63,10 +58,23 @@ public class ClientPacketsHandler : MonoBehaviour
         int id = packet.ReadInt();
         Vector2 position = packet.ReadVector2();
 
-        if (PlayersManager.PlayersContainsKey(id))
-            PlayersManager.GetPlayer(id).SetPosition(position);
-        else
-            Debug.Log("An unnecessary \"PlayerMovement\" package received.");
+        PlayersManager.GetPlayer(id).SetPosition(position);
+    }
+
+    public static void SpawnFood(Packet packet)
+    {
+        int hightIndex = packet.ReadInt();
+        int widthIndex = packet.ReadInt();
+        Vector2 position = packet.ReadVector2();
+
+        FoodManager.SpawnFood(hightIndex, widthIndex, position);
+    }
+    public static void RemoveFood(Packet packet)
+    {
+        int hightIndex = packet.ReadInt();
+        int widthIndex = packet.ReadInt();
+
+        FoodManager.RemoveFood(hightIndex, widthIndex);
     }
     #endregion
 }
