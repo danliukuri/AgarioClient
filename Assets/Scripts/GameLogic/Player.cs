@@ -24,5 +24,9 @@ public class Player : MonoBehaviour
     {
         transform.position = position;
     }
+    public void EatFood(float sizeChange)
+    {
+        transform.localScale += new Vector3(sizeChange, sizeChange);
+    }
     #endregion
 }

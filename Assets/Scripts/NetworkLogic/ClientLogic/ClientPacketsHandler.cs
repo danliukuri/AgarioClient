@@ -27,7 +27,6 @@ static class ClientPacketsHandler
         int expansionMagnitudeOfVisibleSectors = packet.ReadInt();
         int expansionMagnitudeOfInvisibleSectors = packet.ReadInt();
 
-        FoodManager.Initialize(height, width);
         Field.Initialize(height, width, position, sectorSize,
             expansionMagnitudeOfVisibleSectors, expansionMagnitudeOfInvisibleSectors);
     }
@@ -63,18 +62,23 @@ static class ClientPacketsHandler
 
     public static void SpawnFood(Packet packet)
     {
-        int hightIndex = packet.ReadInt();
-        int widthIndex = packet.ReadInt();
+        int foodId = packet.ReadInt();
         Vector2 position = packet.ReadVector2();
 
-        FoodManager.SpawnFood(hightIndex, widthIndex, position);
+        FoodManager.SpawnFood(foodId, position);
     }
     public static void RemoveFood(Packet packet)
     {
-        int hightIndex = packet.ReadInt();
-        int widthIndex = packet.ReadInt();
+        int foodId = packet.ReadInt();
+        FoodManager.RemoveFood(foodId);
+    }
 
-        FoodManager.RemoveFood(hightIndex, widthIndex);
+    public static void EatingFood(Packet packet)
+    {
+        int playerId = packet.ReadInt();
+        float sizeChange = packet.ReadFloat();
+
+        PlayersManager.GetPlayer(playerId).EatFood(sizeChange);
     }
     #endregion
 }

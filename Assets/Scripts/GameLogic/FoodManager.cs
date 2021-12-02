@@ -7,7 +7,7 @@ public class FoodManager : MonoBehaviour
     #region Fields
     [SerializeField] GameObject foodPrefab;
 
-    static List<GameObject>[,] allFoodBySector;
+    static Dictionary<int, GameObject> allFood;
     static FoodManager instance;
     #endregion
 
@@ -17,6 +17,7 @@ public class FoodManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            Initialize();
         }
         else if (instance != this)
         {
@@ -24,32 +25,24 @@ public class FoodManager : MonoBehaviour
             Destroy(this);
         }
     }
-    public static void Initialize(int hight, int width)
+    static void Initialize()
     {
-        allFoodBySector = new List<GameObject>[hight, width];
-        for (int i = 0; i < hight; i++)
-            for (int j = 0; j < width; j++)
-                allFoodBySector[i, j] = new List<GameObject>();
+        allFood = new Dictionary<int, GameObject>();
     }
 
-    public static void SpawnFood(int hightIndex, int widthIndex, Vector2 position)
+    public static void SpawnFood(int foodId, Vector2 position)
     {
         GameObject foodGameObject = PoolManager.GetGameObject(instance.foodPrefab.name);
-        List<GameObject> foodInSector = allFoodBySector[hightIndex, widthIndex];
-        foodInSector.Add(foodGameObject);
+
+        allFood.Add(foodId, foodGameObject);
 
         foodGameObject.transform.position = position;
         foodGameObject.SetActive(true);
     }
-    public static void RemoveFood(int hightIndex, int widthIndex)
+    public static void RemoveFood(int foodId)
     {
-        List<GameObject> foodInSector = allFoodBySector[hightIndex, widthIndex];
-        for (int i = 0; i < foodInSector.Count; i++)
-        {
-            GameObject food = foodInSector[i];
-            foodInSector.Remove(food);
-            food.SetActive(false);
-        }
+        allFood[foodId].SetActive(false);
+        allFood.Remove(foodId);
     }
     #endregion
 }
