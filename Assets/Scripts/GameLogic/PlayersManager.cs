@@ -28,16 +28,15 @@ public class PlayersManager : MonoBehaviour
         }
     }
 
-    public static void SpawnPlayer(int id, string username, Vector3 position)
+    public static void SpawnPlayer(int id, string username, Vector3 position, float size)
     {
         string playerName = id == Client.Id ?
             instance.localPlayerPrefab.name :
             instance.globalPlayerPrefab.name;
         GameObject playerGameObject = PoolManager.GetGameObject(playerName);
-        playerGameObject.transform.position = position;
 
         Player player = playerGameObject.GetComponent<Player>();
-        player.Initialize(username);
+        player.Initialize(username, position, size);
         players.Add(id, player);
 
         playerGameObject.SetActive(true);

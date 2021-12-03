@@ -3,19 +3,38 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    #region Properties
+    public float Size
+    {
+        get => transform.localScale.x;
+        private set => transform.localScale = new Vector3(value, value, defaultSize);
+    }
+    #endregion
+
     #region Fields
     [SerializeField] TextMeshProUGUI usernameTMP;
+
+    static Vector3 defaultPosition;
+    static float defaultSize;
     #endregion
 
     #region Methods
-    public void Initialize(string username)
+    void Awake()
+    {
+        defaultPosition = transform.position;
+        defaultSize = transform.localScale.x;
+    }
+    public void Initialize(string username, Vector3 position, float size)
     {
         usernameTMP.text = username;
+        transform.position = position;
+        Size = size;
     }
     public void Reset()
     {
         usernameTMP.text = default;
-        transform.position = Vector3.zero;
+        transform.position = defaultPosition;
+        Size = defaultSize;
     }
 
     public void SetPosition(Vector2 position)
@@ -24,7 +43,7 @@ public class Player : MonoBehaviour
     }
     public void EatFood(float sizeChange)
     {
-        transform.localScale += new Vector3(sizeChange, sizeChange);
+        Size += sizeChange;
     }
     #endregion
 }

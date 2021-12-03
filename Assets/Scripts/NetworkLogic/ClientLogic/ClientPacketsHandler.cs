@@ -43,8 +43,9 @@ static class ClientPacketsHandler
         int id = packet.ReadInt();
         string username = packet.ReadString();
         Vector2 position = packet.ReadVector2();
+        float size = packet.ReadFloat();
 
-        PlayersManager.SpawnPlayer(id, username, position);
+        PlayersManager.SpawnPlayer(id, username, position, size);
     }
     public static void RemovePlayer(Packet packet)
     {
