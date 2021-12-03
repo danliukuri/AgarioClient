@@ -8,7 +8,7 @@ public class ClientPacketsSender : MonoBehaviour
         using (Packet packet = new Packet((int)ClientPackets.WelcomeReceived))
         {
             packet.Write(Client.Id);
-            packet.Write(UIManager.UsernameField.text);
+            packet.Write(UIManager.PlayerUsername);
 
             SendTCPData(packet);
         }
