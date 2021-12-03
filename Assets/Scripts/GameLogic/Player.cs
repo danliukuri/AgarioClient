@@ -1,22 +1,20 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    #region Properties
-    public int Id { get; private set; }
-    public string Username { get; private set; }
+    #region Fields
+    [SerializeField] TextMeshProUGUI usernameTMP;
     #endregion
 
     #region Methods
-    public void Initialize(int id, string username)
+    public void Initialize(string username)
     {
-        Id = id;
-        Username = username;
+        usernameTMP.text = username;
     }
     public void Reset()
     {
-        Id = default;
-        Username = default;
+        usernameTMP.text = default;
         transform.position = Vector3.zero;
     }
 

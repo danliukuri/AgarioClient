@@ -37,7 +37,7 @@ public class PlayersManager : MonoBehaviour
         playerGameObject.transform.position = position;
 
         Player player = playerGameObject.GetComponent<Player>();
-        player.Initialize(id, username);
+        player.Initialize(username);
         players.Add(id, player);
 
         playerGameObject.SetActive(true);
