@@ -10,7 +10,8 @@ public class Field : MonoBehaviour
     static Vector2[,] sectorsPositions;
     static GameObject[,] sectors;
 
-    static Queue<GameObject> freeSectorGameObjects = new Queue<GameObject>();
+    static Queue<GameObject> freeSectors = new Queue<GameObject>();
+    static List<GameObject> usedSectors = new List<GameObject>();
     static ((int Min, int Max) Height, (int Min, int Max) Width) sectorsRemovalZone;
     static (int Height, int Width) sectorsArrayDimensions;
 
@@ -74,6 +75,16 @@ public class Field : MonoBehaviour
             position.y += sectorSize.y;
         }
     }
+    public static void Reset()
+    {
+        freeSectors = new Queue<GameObject>();
+        if (sectors != default)
+        {
+            foreach (GameObject usedSector in usedSectors)
+                usedSector.SetActive(false);
+            sectors = new GameObject[sectorsArrayDimensions.Height, sectorsArrayDimensions.Width];
+        }
+    }
 
     public static void DrawSectors(int heightIndex, int widthIndex)
     {
@@ -87,12 +98,13 @@ public class Field : MonoBehaviour
             for (int j = sectorsSpawnZone.Width.Min; j <= sectorsSpawnZone.Width.Max; j++)
                 if (sectors[i, j] == null)
                 {
-                    GameObject sectorGameObject = freeSectorGameObjects.Count != 0 ?
-                        freeSectorGameObjects.Dequeue() :
+                    GameObject sectorGameObject = freeSectors.Count != 0 ?
+                        freeSectors.Dequeue() :
                         PoolManager.GetGameObject(instance.sector.name);
 
                     sectorGameObject.transform.position = sectorsPositions[i, j];
                     sectorGameObject.SetActive(true);
+                    usedSectors.Add(sectorGameObject);
                     sectors[i, j] = sectorGameObject;
                 }
     }
@@ -108,7 +120,8 @@ public class Field : MonoBehaviour
                     j < sectorsSpawnExpandedZone.Width.Min || j > sectorsSpawnExpandedZone.Width.Max)
                     if (sectors[i, j] != null)
                     {
-                        freeSectorGameObjects.Enqueue(sectors[i, j]);
+                        usedSectors.Remove(sectors[i, j]);
+                        freeSectors.Enqueue(sectors[i, j]);
                         sectors[i, j].SetActive(false);
                         sectors[i, j] = null;
                     }

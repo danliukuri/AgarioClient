@@ -7,7 +7,7 @@ public class FoodManager : MonoBehaviour
     #region Fields
     [SerializeField] GameObject foodPrefab;
 
-    static Dictionary<int, GameObject> allFood;
+    static Dictionary<int, GameObject> allFood = new Dictionary<int, GameObject>();
     static FoodManager instance;
     #endregion
 
@@ -17,7 +17,6 @@ public class FoodManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            Initialize();
         }
         else if (instance != this)
         {
@@ -25,8 +24,10 @@ public class FoodManager : MonoBehaviour
             Destroy(this);
         }
     }
-    static void Initialize()
+    public static void Reset()
     {
+        foreach (int foodId in allFood.Keys)
+            allFood[foodId].SetActive(false);
         allFood = new Dictionary<int, GameObject>();
     }
 

@@ -14,8 +14,9 @@ public class PlayersManager : MonoBehaviour
 
     #region Methods
     public static Player GetPlayer(int index) => players[index];
+    public static bool ContainsPlayer(int playerId) => players.ContainsKey(playerId);
 
-    private void Awake()
+    void Awake()
     {
         if (instance == null)
         {
@@ -26,6 +27,15 @@ public class PlayersManager : MonoBehaviour
             Debug.Log("Instance already exists, destroying object!");
             Destroy(this);
         }
+    }
+    public static void Reset()
+    {
+        foreach (int playerId in players.Keys)
+        {
+            players[playerId].Reset();
+            players[playerId].gameObject.SetActive(false);
+        }
+        players = new Dictionary<int, Player>();
     }
 
     public static void SpawnPlayer(int id, string username, Vector3 position, float size)

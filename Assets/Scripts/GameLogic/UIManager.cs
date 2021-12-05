@@ -42,10 +42,22 @@ public class UIManager : MonoBehaviour
         defaultUsernamePlaceholderText = usernamePlaceholder.text;
         userLossGameObject.SetActive(false);
     }
+    static void Reset()
+    {
+        instance.username.text = default;
+        usernamePlaceholder.text = defaultUsernamePlaceholderText;
+
+        instance.userLossGameObject.SetActive(false);
+
+        instance.username.interactable = true;
+        instance.startMenu.SetActive(true);
+
+        instance.uiCamera.SetActive(true);
+    }
 
     public void ConnectToServer()
     {
-        if(!Regex.IsMatch(username.text, @"^(?i)[A-Z](([\'\-][A-Z])?[A-Z]*)*$"))
+        if (!Regex.IsMatch(username.text, @"^(?i)[A-Z](([\'\-][A-Z])?[A-Z]*)*$"))
         {
             username.text = default;
             usernamePlaceholder.text = "Try again";
@@ -61,6 +73,7 @@ public class UIManager : MonoBehaviour
 
     public static void UserLoss()
     {
+        Reset();
         instance.userLossGameObject.SetActive(true);
     }
     #endregion
