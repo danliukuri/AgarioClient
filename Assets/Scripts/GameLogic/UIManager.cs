@@ -1,16 +1,23 @@
-﻿using TMPro;
+﻿using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
-using System.Text.RegularExpressions;
 
 public class UIManager : MonoBehaviour
 {
     #region Properties
-    public static string PlayerUsername => instance.usernameField.text;
+    public static string PlayerUsername => instance.username.text;
     #endregion
 
     #region Fields
     [SerializeField] GameObject startMenu;
-    [SerializeField] TMP_InputField usernameField;
+    [SerializeField] TMP_InputField username;
+
+    [SerializeField] GameObject userLossGameObject;
+
+    [SerializeField] GameObject uiCamera;
+
+    static TextMeshProUGUI usernamePlaceholder;
+    static string defaultUsernamePlaceholderText;
 
     static UIManager instance;
     #endregion
@@ -21,6 +28,7 @@ public class UIManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            Initialize();
         }
         else if (instance != this)
         {
@@ -28,20 +36,32 @@ public class UIManager : MonoBehaviour
             Destroy(this);
         }
     }
+    void Initialize()
+    {
+        usernamePlaceholder = (TextMeshProUGUI)instance.username.placeholder;
+        defaultUsernamePlaceholderText = usernamePlaceholder.text;
+        userLossGameObject.SetActive(false);
+    }
 
     public void ConnectToServer()
     {
-        if(!Regex.IsMatch(usernameField.text, @"^(?i)[A-Z](([\'\-][A-Z])?[A-Z]*)*$"))
+        if(!Regex.IsMatch(username.text, @"^(?i)[A-Z](([\'\-][A-Z])?[A-Z]*)*$"))
         {
-            usernameField.text = default;
-            ((TextMeshProUGUI)usernameField.placeholder).text = "Try again";
+            username.text = default;
+            usernamePlaceholder.text = "Try again";
         }
         else
         {
             startMenu.SetActive(false);
-            usernameField.interactable = false;
+            username.interactable = false;
+            uiCamera.SetActive(false);
             Client.ConnectToServer();
         }
+    }
+
+    public static void UserLoss()
+    {
+        instance.userLossGameObject.SetActive(true);
     }
     #endregion
 }
