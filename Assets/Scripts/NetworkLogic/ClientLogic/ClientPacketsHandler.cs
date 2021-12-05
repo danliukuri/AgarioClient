@@ -58,7 +58,10 @@ static class ClientPacketsHandler
         int id = packet.ReadInt();
         Vector2 position = packet.ReadVector2();
 
-        PlayersManager.GetPlayer(id).SetPosition(position);
+        if (PlayersManager.ContainsPlayer(id))
+            PlayersManager.GetPlayer(id).SetPosition(position);
+        else
+            Debug.Log("An unnecessary \"PlayerMovement\" UDP package for player " + id + " received.");
     }
 
     public static void SpawnFood(Packet packet)
@@ -79,7 +82,20 @@ static class ClientPacketsHandler
         int playerId = packet.ReadInt();
         float sizeChange = packet.ReadFloat();
 
-        PlayersManager.GetPlayer(playerId).EatFood(sizeChange);
+        if (PlayersManager.ContainsPlayer(playerId))
+            PlayersManager.GetPlayer(playerId).EatFood(sizeChange);
+        else
+            Debug.Log("An unnecessary \"EatingFood\" UDP package for player " + playerId + " received.");
+    }
+
+    public static void Losing(Packet packet)
+    {
+        Client.Disconnect();
+
+        PlayersManager.Reset();
+        FoodManager.Reset();
+        Field.Reset();
+        UIManager.UserLoss();
     }
     #endregion
 }
