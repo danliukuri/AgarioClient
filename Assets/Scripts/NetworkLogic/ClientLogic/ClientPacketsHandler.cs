@@ -32,10 +32,10 @@ static class ClientPacketsHandler
     }
     public static void CurrentFieldSectorUpdate(Packet packet)
     {
-        int hightIndex = packet.ReadInt();
+        int heightIndex = packet.ReadInt();
         int widthIndex = packet.ReadInt();
 
-        Field.DrawSectors(hightIndex, widthIndex);
+        Field.DrawSectors(heightIndex, widthIndex);
     }
 
     public static void SpawnPlayer(Packet packet)
