@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using Pool;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 
@@ -14,7 +16,11 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] GameObject userLossGameObject;
 
-    [SerializeField] GameObject uiCamera;
+    [SerializeField] GameObject gameplayMenu;
+    [SerializeField] GameObject bestPlayersBySize;
+    [SerializeField] GameObject itemOfListOfTheBestPlayersBySize;
+
+    static List<GameObject> listOfTheBestPlayersBySize = new List<GameObject>();
 
     static TextMeshProUGUI usernamePlaceholder;
     static string defaultUsernamePlaceholderText;
@@ -41,6 +47,8 @@ public class UIManager : MonoBehaviour
         usernamePlaceholder = (TextMeshProUGUI)instance.username.placeholder;
         defaultUsernamePlaceholderText = usernamePlaceholder.text;
         userLossGameObject.SetActive(false);
+        gameplayMenu.SetActive(false);
+        bestPlayersBySize.SetActive(false);
     }
     static void Reset()
     {
@@ -51,8 +59,15 @@ public class UIManager : MonoBehaviour
 
         instance.username.interactable = true;
         instance.startMenu.SetActive(true);
-
-        instance.uiCamera.SetActive(true);
+        instance.gameplayMenu.SetActive(false);
+        instance.bestPlayersBySize.SetActive(false);
+        ResetListOfTheBestPlayersBySize();
+    }
+    static void ResetListOfTheBestPlayersBySize()
+    {
+        foreach (GameObject item in listOfTheBestPlayersBySize)
+            item.SetActive(false);
+        listOfTheBestPlayersBySize = new List<GameObject>();
     }
 
     public void ConnectToServer()
@@ -66,8 +81,8 @@ public class UIManager : MonoBehaviour
         {
             startMenu.SetActive(false);
             username.interactable = false;
-            uiCamera.SetActive(false);
             Client.ConnectToServer();
+            gameplayMenu.SetActive(true);
         }
     }
 
@@ -75,6 +90,22 @@ public class UIManager : MonoBehaviour
     {
         Reset();
         instance.userLossGameObject.SetActive(true);
+    }
+
+    public static void DisplayListOfTheBestPlayersNamesBySize(string[] playerNames)
+    {
+        ResetListOfTheBestPlayersBySize(); 
+        instance.bestPlayersBySize.SetActive(true);
+        for (int i = 0; i < playerNames.Length; i++)
+        {
+            GameObject item = PoolManager.GetGameObject(instance.itemOfListOfTheBestPlayersBySize.name);
+            listOfTheBestPlayersBySize.Add(item);
+            TextMeshProUGUI itemTMP = item.GetComponentInChildren<Transform>().
+                                           GetComponentInChildren<TextMeshProUGUI>();
+            itemTMP.text = (i+1) + ". " + playerNames[i];
+
+            item.SetActive(true);
+        }
     }
     #endregion
 }
