@@ -97,5 +97,15 @@ static class ClientPacketsHandler
         Field.Reset();
         UIManager.UserLoss();
     }
+
+    public static void ListOfTheBestPlayersNamesBySize(Packet packet)
+    {
+        int playersCount = packet.ReadInt();
+        string[] playerNames = new string[playersCount];
+        for (int i = 0; i < playersCount; i++)
+            playerNames[i] = packet.ReadString();
+
+        UIManager.DisplayListOfTheBestPlayersNamesBySize(playerNames);
+    }
     #endregion
 }
