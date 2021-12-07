@@ -37,7 +37,11 @@ public class PlayersManager : MonoBehaviour
         }
         players = new Dictionary<int, Player>();
     }
-
+    public static void ResetPlayerSizes()
+    {
+        foreach (Player player in players.Values)
+            player.ResetSize();
+    }
     public static void SpawnPlayer(int id, string username, Vector3 position, float size)
     {
         string playerName = id == Client.Id ?

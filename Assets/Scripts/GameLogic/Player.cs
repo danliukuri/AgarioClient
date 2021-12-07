@@ -34,8 +34,9 @@ public class Player : MonoBehaviour
     {
         usernameTMP.text = default;
         transform.position = defaultPosition;
-        Size = defaultSize;
+        ResetSize();
     }
+    public void ResetSize() => Size = defaultSize;
 
     public void SetPosition(Vector2 position)
     {
