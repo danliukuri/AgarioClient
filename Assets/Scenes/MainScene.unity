@@ -158,7 +158,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 10, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &12639810
 MonoBehaviour:
@@ -2221,7 +2221,7 @@ MonoBehaviour:
   userLossGameObject: {fileID: 1268788346}
   gameplayMenu: {fileID: 1634466463}
   bestPlayersBySize: {fileID: 1039926432}
-  itemOfListOfTheBestPlayersBySize: {fileID: 0}
+  itemOfListOfTheBestPlayersBySize: {fileID: 8642376821835260663, guid: 0c2e6000182572946826d3773ea74aa7, type: 3}
 --- !u!1 &2026959415
 GameObject:
   m_ObjectHideFlags: 0

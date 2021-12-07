@@ -63,7 +63,8 @@ public partial class Client : MonoBehaviour
             ClientPacketsHandler.RemoveFood,
             ClientPacketsHandler.EatingFood,
             ClientPacketsHandler.Losing,
-            ClientPacketsHandler.ListOfTheBestPlayersNamesBySize
+            ClientPacketsHandler.ListOfTheBestPlayersNamesBySize,
+            ClientPacketsHandler.ResetPlayerSizes
         };
         Debug.Log("Initialized packets.");
     }

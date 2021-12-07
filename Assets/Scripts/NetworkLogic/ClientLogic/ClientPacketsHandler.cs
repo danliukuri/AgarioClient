@@ -107,5 +107,10 @@ static class ClientPacketsHandler
 
         UIManager.DisplayListOfTheBestPlayersNamesBySize(playerNames);
     }
+
+    public static void ResetPlayerSizes(Packet packet)
+    {
+        PlayersManager.ResetPlayerSizes();
+    }
     #endregion
 }
