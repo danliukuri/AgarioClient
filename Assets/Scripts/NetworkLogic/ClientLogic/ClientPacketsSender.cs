@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ClientPacketsSender : MonoBehaviour
+public class ClientPacketsSender
 {
     #region PacketsSending
     public static void WelcomeReceived()
